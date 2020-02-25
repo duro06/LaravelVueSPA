@@ -134,9 +134,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
  //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  computed: {
+    remaining: function remaining() {// console.dir(this.selected);
+    }
+  },
   //PROPS INI ADALAH DATA YANG AKAN DIMINTA DARI PENGGUNA COMPONENT DATATABLE YANG KITA BUAT
   props: {
     //ITEMS STRUKTURNYA ADALAH ARRAY, KARENA BAGIAN INI BERISI DATA YANG AKAN DITAMPILKAN DAN SIFATNYA WAJIB DIKIRIMKAN KETIKA COMPONENT INI DIGUNAKAN
@@ -164,75 +187,89 @@ __webpack_require__.r(__webpack_exports__);
       //FIELD YANG AKAN DISORT AKAN OTOMATIS DISIMPAN DISINI
       sortDesc: false,
       //SEDANGKAN JENISNYA ASCENDING ATAU DESC AKAN DISIMPAN DISINI
-      selectMode: 'multi',
+      selectMode: "multi",
       selected: [],
-      checkedId: []
+      checkedId: [],
+      selectedItems: [],
+      allSelected: false,
+      selectedRow: false,
+      booleanValue: false
     };
   },
   watch: {
     //KETIKA VALUE DARI VARIABLE sortBy BERUBAH
     sortBy: function sortBy(val) {
-      //MAKA KITA EMIT DENGAN NAMA SORT DAN DATANYA ADALAH OBJECT BERUPA VALUE DARI SORTBY DAN SORTDESC
-      //EMIT BERARTI MENGIRIMKAN DATA KEPADA PARENT ATAU YANG MEMANGGIL COMPONENT INI
-      //SEHINGGA DARI PARENT TERSEBUT, KITA BISA MENGGUNAKAN VALUE YANG DIKIRIMKAN
-      this.$emit('sort', {
+      this.$emit("sort", {
         sortBy: this.sortBy,
         sortDesc: this.sortDesc
       });
     },
     //KETIKA VALUE DARI SORTDESC BERUBAH
     sortDesc: function sortDesc(val) {
-      //MAKA CARA YANG SAMA AKAN DIKERJAKAN
-      this.$emit('sort', {
+      this.$emit("sort", {
         sortBy: this.sortBy,
         sortDesc: this.sortDesc
       });
     }
   },
   methods: {
-    // selectId(items){
-    //     this.$emit('selectedId', items)
-    // },
-    removeSelected: function removeSelected(items) {
-      // this.items = this.items.filter(item => item.selected)
-      this.selected = items;
-      this.$emit('removedSelected', items);
-    },
-    onRowSelected: function onRowSelected(items) {
-      this.selected = items; // this.id = items
-      // this.$emit('selectedId', items);
-    },
     selectAllRows: function selectAllRows() {
-      this.$refs.selectableTable.selectAllRows();
+      this.items.forEach(function (item) {
+        return item = event.target.checked;
+      });
+
+      if (this.selectedItems.length === this.items.length) {
+        this.selectedItems = [];
+      } else {
+        this.selectedItems = this.items.slice();
+      }
     },
-    clearSelected: function clearSelected() {
-      this.$refs.selectableTable.clearSelected();
+    // onRowSelected(e, index) {
+    //     this.selected = [];
+    //     if (e.length > 0) {
+    //         this.selected = e.map(val=>val)
+    //         this.allSelected = true;
+    //     }else {
+    //         this.allSelected = false;
+    //     }
+    // // this.selected = items // ini yg awal
+    // },
+    removeSelected: function removeSelected(item) {
+      item = this.selectedItems; // ambil idnya
+
+      this.$emit("removedSelected", item);
     },
+    togleAll: function togleAll() {
+      return this.allSelected ? this.selectAllRows() : this.clearSelected();
+    },
+    // clearSelected() {
+    //     this.$refs.selectableTable.clearSelected()
+    // },
     //JIKA SELECT BOX DIGANTI, MAKA FUNGSI INI AKAN DIJALANKAN
     loadPerPage: function loadPerPage(val) {
       //DAN KITA EMIT LAGI DENGAN NAMA per_page DAN VALUE SESUAI PER_PAGE YANG DIPILIH
-      this.$emit('per_page', this.meta.per_page);
+      this.$emit("per_page", this.meta.per_page);
     },
     //KETIKA PAGINATION BERUBAH, MAKA FUNGSI INI AKAN DIJALANKAN
     changePage: function changePage(val) {
       //KIRIM EMIT DENGAN NAMA PAGINATION DAN VALUENYA ADALAH HALAMAN YANG DIPILIH OLEH USER
-      this.$emit('pagination', val);
+      this.$emit("pagination", val);
     },
     //KETIKA KOTAK PENCARIAN DIISI, MAKA FUNGSI INI AKAN DIJALANKAN
     //KITA GUNAKAN DEBOUNCE UNTUK MEMBUAT DELAY, DIMANA FUNGSI INI AKAN DIJALANKAN
     //500 MIL SECOND SETELAH USER BERHENTI MENGETIK
     search: lodash__WEBPACK_IMPORTED_MODULE_0___default.a.debounce(function (e) {
       //KIRIM EMIT DENGAN NAMA SEARCH DAN VALUE SESUAI YANG DIKETIKKAN OLEH USER
-      this.$emit('search', e.target.value);
+      this.$emit("search", e.target.value);
     }, 500),
     removeData: function removeData(index) {
-      this.$emit('removedData', index); // kirim event removedTodo parent (itemnya)
+      this.$emit("removedData", index); // kirim event removedTodo parent (itemnya)
     },
     editData: function editData(index) {
-      this.$emit('editedData', index); // kirim event editedData parent (itemnya)
+      this.$emit("editedData", index); // kirim event editedData parent (itemnya)
     },
     addNew: function addNew() {
-      this.$emit('createdData'); // kirim event createdData parent (itemnya)
+      this.$emit("createdData"); // kirim event createdData parent (itemnya)
     } // selectId(index) {
     //     this.$emit('selectedId', index);
     // }
@@ -435,15 +472,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
  //IMPORT COMPONENT DATATABLENYA
 // import MyCurrencyInput from '../components/khusus/MyCurrencyInput.vue'
 
@@ -470,8 +498,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       methodForms: "Add",
       // labelButton: "",
       fields: [{
-        key: 'selected',
-        label: '#'
+        key: 'index',
+        label: 'index'
       }, {
         key: 'nama',
         sortable: true
@@ -522,39 +550,80 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   methods: {
-    selectedDataId: function selectedDataId(item) {
-      this.selectedRowsId = item.id;
+    selectedDataId: function selectedDataId(item) {// console.log('ok')
     },
     // remove select
-    hapusDataTerseleksi: function hapusDataTerseleksi(val) {
-      //    const params = {params: {'id': 
-      //         val}}
-      //         console.log(params)
-      console.log(val); // try {
-      //     await itemService.deleteItem(items);
-      //     this.items = this.items.filter(obj => {
-      //         return obj.id != item.id;
-      //     });
-      //     this.flashMessage.success({
-      //         message: "Item DELETED successfully!",
-      //         time: 5000
-      //     });
-      // } catch (error) {
-      //     this.flashMessage.error({
-      //         message: error.response.data.message,
-      //         time: 5000
-      //     });
-      // }
-    },
+    hapusDataTerseleksi: function () {
+      var _hapusDataTerseleksi = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(val) {
+        var _this = this;
+
+        var params;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (window.confirm("Are you sure you want to delete this selection data ?")) {
+                  _context.next = 2;
+                  break;
+                }
+
+                return _context.abrupt("return");
+
+              case 2:
+                params = {
+                  'items': val
+                };
+                _context.prev = 3;
+                _context.next = 6;
+                return _services_items_service__WEBPACK_IMPORTED_MODULE_3__["deleteAllSelected"](params);
+
+              case 6:
+                val.map(function (val) {
+                  var index = _this.items.indexOf(val);
+
+                  _this.items.splice(index, 1);
+                }); // this.loadItemsData(); //DAN LOAD DATA BARU BERDASARKAN SORT
+
+                this.flashMessage.success({
+                  message: "Item DELETED successfully!",
+                  time: 5000
+                });
+                _context.next = 13;
+                break;
+
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](3);
+                this.flashMessage.error({
+                  message: _context.t0.response.data.message,
+                  time: 5000
+                });
+
+              case 13:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[3, 10]]);
+      }));
+
+      function hapusDataTerseleksi(_x) {
+        return _hapusDataTerseleksi.apply(this, arguments);
+      }
+
+      return hapusDataTerseleksi;
+    }(),
     //METHOD INI AKAN MENGHANDLE REQUEST DATA KE API
     loadItemsData: function () {
       var _loadItemsData = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var current_page, sorting, params, response, getData;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 current_page = this.search == '' ? this.current_page : 1;
                 sorting = this.sortByDesc ? 'DESC' : 'ASC'; // let
@@ -567,6 +636,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     sortby: this.sortBy,
                     sortbydesc: sorting
                   }
+<<<<<<< HEAD
                 }; // console.log(params);
 
                 _context.prev = 3;
@@ -575,6 +645,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 6:
                 response = _context.sent;
+=======
+                };
+                _context2.prev = 3;
+                _context2.next = 6;
+                return _services_items_service__WEBPACK_IMPORTED_MODULE_3__["loadData"](params);
+
+              case 6:
+                response = _context2.sent;
+>>>>>>> ryuuuu/master
                 // console.log(response);
                 getData = response.data.data;
                 this.items = getData.data; //MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
@@ -590,24 +669,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   from: getData.from,
                   to: getData.to
                 };
-                _context.next = 18;
+                _context2.next = 17;
                 break;
 
+<<<<<<< HEAD
               case 14:
                 _context.prev = 14;
                 _context.t0 = _context["catch"](3);
                 console.log('' + _context.t0);
+=======
+              case 13:
+                _context2.prev = 13;
+                _context2.t0 = _context2["catch"](3);
+                console.log('' + _context2.t0);
+>>>>>>> ryuuuu/master
                 this.flashMessage.error({
                   message: "Some error occured, Please Refresh!",
                   time: 5000
                 });
 
-              case 18:
+              case 17:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
+<<<<<<< HEAD
         }, _callee, this, [[3, 14]]);
+=======
+        }, _callee2, this, [[3, 13]]);
+>>>>>>> ryuuuu/master
       }));
 
       function loadItemsData() {
@@ -644,51 +734,53 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     removeData: function () {
       var _removeData = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(item) {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(item) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 if (window.confirm("Are you sure you want to delete ".concat(item.nama, " ?"))) {
-                  _context2.next = 2;
+                  _context3.next = 2;
                   break;
                 }
 
-                return _context2.abrupt("return");
+                return _context3.abrupt("return");
 
               case 2:
-                _context2.prev = 2;
-                _context2.next = 5;
+                _context3.prev = 2;
+                _context3.next = 5;
                 return _services_items_service__WEBPACK_IMPORTED_MODULE_3__["deleteItem"](item.id);
 
               case 5:
-                this.items = this.items.filter(function (obj) {
-                  return obj.id != item.id;
-                });
+                // this.items = this.items.filter(obj => {
+                //     return obj.id != item.id;
+                // });
+                this.loadItemsData(); //DAN LOAD DATA BARU BERDASARKAN SORT
+
                 this.flashMessage.success({
                   message: "Item DELETED successfully!",
                   time: 5000
                 });
-                _context2.next = 12;
+                _context3.next = 12;
                 break;
 
               case 9:
-                _context2.prev = 9;
-                _context2.t0 = _context2["catch"](2);
+                _context3.prev = 9;
+                _context3.t0 = _context3["catch"](2);
                 this.flashMessage.error({
-                  message: _context2.t0.response.data.message,
+                  message: _context3.t0.response.data.message,
                   time: 5000
                 });
 
               case 12:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2, this, [[2, 9]]);
+        }, _callee3, this, [[2, 9]]);
       }));
 
-      function removeData(_x) {
+      function removeData(_x2) {
         return _removeData.apply(this, arguments);
       }
 
@@ -723,12 +815,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     updateData: function () {
       var _updateData = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(item) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(item) {
         var formData, response, _response;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
                 formData = new FormData();
                 formData.append("nama", this.editItemData.nama);
@@ -737,16 +829,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 formData.append("stok_awal", this.editItemData.stok_awal);
 
                 if (!(this.methodForms == 'Add')) {
-                  _context3.next = 27;
+                  _context4.next = 27;
                   break;
                 }
 
-                _context3.prev = 6;
-                _context3.next = 9;
+                _context4.prev = 6;
+                _context4.next = 9;
                 return _services_items_service__WEBPACK_IMPORTED_MODULE_3__["createItem"](formData);
 
               case 9:
-                response = _context3.sent;
+                response = _context4.sent;
                 //    jika sukses
                 //    this.items.unshift(response.data);
                 this.loadItemsData();
@@ -756,40 +848,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   message: "Category stored successfully!",
                   time: 5000
                 });
-                _context3.next = 25;
+                _context4.next = 25;
                 break;
 
               case 16:
-                _context3.prev = 16;
-                _context3.t0 = _context3["catch"](6);
-                _context3.t1 = _context3.t0.response.status;
-                _context3.next = _context3.t1 === 422 ? 21 : 23;
+                _context4.prev = 16;
+                _context4.t0 = _context4["catch"](6);
+                _context4.t1 = _context4.t0.response.status;
+                _context4.next = _context4.t1 === 422 ? 21 : 23;
                 break;
 
               case 21:
-                this.errors = _context3.t0.response.data.errors;
-                return _context3.abrupt("break", 25);
+                this.errors = _context4.t0.response.data.errors;
+                return _context4.abrupt("break", 25);
 
               case 23:
                 this.flashMessage.error({
                   message: "Some error occured, Please Try Again!",
                   time: 5000
                 });
-                return _context3.abrupt("break", 25);
+                return _context4.abrupt("break", 25);
 
               case 25:
-                _context3.next = 40;
+                _context4.next = 40;
                 break;
 
               case 27:
                 // ini untuk edit data
                 formData.append('_method', 'put');
-                _context3.prev = 28;
-                _context3.next = 31;
+                _context4.prev = 28;
+                _context4.next = 31;
                 return _services_items_service__WEBPACK_IMPORTED_MODULE_3__["updateItem"](this.editItemData.id, formData);
 
               case 31:
-                _response = _context3.sent;
+                _response = _context4.sent;
                 this.items.map(function (item) {
                   if (item.id === _response.data.id) {
                     for (var key in _response.data) {
@@ -803,26 +895,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   message: "Item Updated successfully!",
                   time: 5000
                 });
-                _context3.next = 40;
+                _context4.next = 40;
                 break;
 
               case 37:
-                _context3.prev = 37;
-                _context3.t2 = _context3["catch"](28);
+                _context4.prev = 37;
+                _context4.t2 = _context4["catch"](28);
                 this.flashMessage.error({
-                  message: _context3.t2.response.data.message,
+                  message: _context4.t2.response.data.message,
                   time: 5000
                 });
 
               case 40:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, this, [[6, 16], [28, 37]]);
+        }, _callee4, this, [[6, 16], [28, 37]]);
       }));
 
-      function updateData(_x2) {
+      function updateData(_x3) {
         return _updateData.apply(this, arguments);
       }
 
@@ -940,11 +1032,7 @@ var render = function() {
           attrs: {
             striped: "",
             hover: "",
-            small: "",
             dark: "",
-            "no-border-collapse": "",
-            selectable: "",
-            "select-mode": _vm.selectMode,
             items: _vm.items,
             fields: _vm.fields,
             "sort-by": _vm.sortBy,
@@ -964,52 +1052,40 @@ var render = function() {
             },
             "update:sort-desc": function($event) {
               _vm.sortDesc = $event
-            },
-            "row-selected": _vm.onRowSelected
+            }
           },
           scopedSlots: _vm._u([
             {
-              key: "cell(selected)",
+              key: "head(index)",
+              fn: function() {
+                return [
+                  _c("b-form-checkbox", {
+                    attrs: {
+                      size: "sm",
+                      checked: _vm.selectedItems.length === _vm.items.length
+                    },
+                    on: { change: _vm.selectAllRows }
+                  })
+                ]
+              },
+              proxy: true
+            },
+            {
+              key: "cell(index)",
               fn: function(row) {
                 return [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: row.item.selected,
-                        expression: "row.item.selected"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(row.item.selected)
-                        ? _vm._i(row.item.selected, null) > -1
-                        : row.item.selected
+                  _c("b-form-checkbox", {
+                    attrs: {
+                      size: "sm",
+                      name: "selected-items",
+                      value: row.item
                     },
-                    on: {
-                      change: function($event) {
-                        var $$a = row.item.selected,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 &&
-                              _vm.$set(row.item, "selected", $$a.concat([$$v]))
-                          } else {
-                            $$i > -1 &&
-                              _vm.$set(
-                                row.item,
-                                "selected",
-                                $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                              )
-                          }
-                        } else {
-                          _vm.$set(row.item, "selected", $$c)
-                        }
-                      }
+                    model: {
+                      value: _vm.selectedItems,
+                      callback: function($$v) {
+                        _vm.selectedItems = $$v
+                      },
+                      expression: "selectedItems"
                     }
                   })
                 ]
@@ -1020,7 +1096,7 @@ var render = function() {
               fn: function(row) {
                 return [
                   _c(
-                    "b-button",
+                    "button",
                     {
                       directives: [
                         {
@@ -1029,23 +1105,19 @@ var render = function() {
                           modifiers: { hover: true }
                         }
                       ],
-                      attrs: {
-                        pill: "",
-                        size: "sm",
-                        variant: "info",
-                        title: "Edit Data"
-                      },
+                      staticClass: "tombol-di-table",
+                      attrs: { title: "Edit Data" },
                       on: {
                         click: function($event) {
                           return _vm.editData(row.item)
                         }
                       }
                     },
-                    [_c("span", { staticClass: "fa fa-pencil-alt" })]
+                    [_c("span", { staticClass: "fa fa-edit" })]
                   ),
                   _vm._v(" "),
                   _c(
-                    "b-button",
+                    "button",
                     {
                       directives: [
                         {
@@ -1054,12 +1126,8 @@ var render = function() {
                           modifiers: { hover: true }
                         }
                       ],
-                      attrs: {
-                        pill: "",
-                        size: "sm",
-                        variant: "danger",
-                        title: "Hapus Data"
-                      },
+                      staticClass: "tombol-di-table",
+                      attrs: { title: "Hapus Data" },
                       on: {
                         click: function($event) {
                           return _vm.removeData(row.item)
@@ -1074,82 +1142,73 @@ var render = function() {
           ])
         }),
         _vm._v(" "),
-        _c(
-          "b-button",
-          { attrs: { size: "sm" }, on: { click: _vm.selectAllRows } },
-          [_vm._v("Select all")]
-        ),
-        _vm._v(" "),
-        _c(
-          "b-button",
-          { attrs: { size: "sm" }, on: { click: _vm.clearSelected } },
-          [_vm._v("Clear selected")]
-        ),
-        _vm._v(" "),
-        _c(
-          "b-button",
-          {
-            attrs: { size: "sm" },
-            on: {
-              click: function($event) {
-                return _vm.removeSelected(_vm.items)
-              }
-            }
-          },
-          [_vm._v("Hapus")]
-        )
+        _c("div", { staticClass: "box-bw-table" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-md-6" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "tombol-di-bw-table",
+                  attrs: { disabled: !_vm.selectedItems.length },
+                  on: { click: _vm.removeSelected }
+                },
+                [
+                  _c("i", { staticClass: "fa fa-trash" }),
+                  _vm._v(" Delete Selected Table Data\n            ")
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-6 text-right" }, [
+              _c("p", { staticStyle: { color: "white" } }, [
+                _vm._v(
+                  "\n                    Showing " +
+                    _vm._s(_vm.meta.from) +
+                    " to " +
+                    _vm._s(_vm.meta.to) +
+                    " of\n                    " +
+                    _vm._s(_vm.meta.total) +
+                    " table data\n                "
+                )
+              ])
+            ])
+          ])
+        ])
       ],
       1
     ),
     _vm._v(" "),
-    _c("br"),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-md-6" }, [
-      _c("p", [
-        _vm._v(
-          "Showing " +
-            _vm._s(_vm.meta.from) +
-            " to " +
-            _vm._s(_vm.meta.to) +
-            " of " +
-            _vm._s(_vm.meta.total) +
-            " items"
-        )
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "col-md-6" },
-      [
-        _c("b-pagination", {
-          staticClass: "mt-4",
-          attrs: {
-            "total-rows": _vm.meta.total,
-            "per-page": _vm.meta.per_page,
-            align: "right",
-            "aria-controls": "dw-datatable",
-            size: "sm",
-            "first-text": "First",
-            "prev-text": "⏪",
-            "next-text": "⏩",
-            "last-text": "Last"
-          },
-          on: { change: _vm.changePage },
-          model: {
-            value: _vm.meta.current_page,
-            callback: function($$v) {
-              _vm.$set(_vm.meta, "current_page", $$v)
+    _c("div", { staticClass: "col-md-12" }, [
+      _c(
+        "div",
+        { staticClass: "text-right" },
+        [
+          _c("b-pagination", {
+            staticClass: "mt-4",
+            attrs: {
+              "total-rows": _vm.meta.total,
+              "per-page": _vm.meta.per_page,
+              align: "right",
+              "aria-controls": "dw-datatable",
+              size: "sm",
+              "first-text": "First",
+              "prev-text": "⏪",
+              "next-text": "⏩",
+              "last-text": "Last"
             },
-            expression: "meta.current_page"
-          }
-        }),
-        _vm._v("\n         Selected Rows:"),
-        _c("br"),
-        _vm._v("\n  " + _vm._s(_vm.selected) + "\n    ")
-      ],
-      1
-    )
+            on: { change: _vm.changePage },
+            model: {
+              value: _vm.meta.current_page,
+              callback: function($$v) {
+                _vm.$set(_vm.meta, "current_page", $$v)
+              },
+              expression: "meta.current_page"
+            }
+          })
+        ],
+        1
+      )
+    ])
   ])
 }
 var staticRenderFns = []
@@ -1219,42 +1278,30 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "container", staticStyle: { "padding-top": "20px" } },
     [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-12" }, [
-          _c("div", { staticClass: "card" }, [
-            _vm._m(0),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "card-body" },
-              [
-                _c("app-datatable", {
-                  attrs: {
-                    items: _vm.items,
-                    fields: _vm.fields,
-                    meta: _vm.meta
-                  },
-                  on: {
-                    per_page: _vm.handlePerPage,
-                    pagination: _vm.handlePagination,
-                    search: _vm.handleSearch,
-                    sort: _vm.handleSort,
-                    removedData: _vm.removeData,
-                    editedData: _vm.editData,
-                    createdData: _vm.addData,
-                    removedSelected: _vm.hapusDataTerseleksi,
-                    selectedId: _vm.selectedDataId
-                  }
-                })
-              ],
-              1
-            )
-          ])
-        ])
+      _c("div", { staticClass: "container-fluid mt-4" }, [
+        _c(
+          "div",
+          { staticClass: "col-md-12" },
+          [
+            _c("app-datatable", {
+              attrs: { items: _vm.items, fields: _vm.fields, meta: _vm.meta },
+              on: {
+                per_page: _vm.handlePerPage,
+                pagination: _vm.handlePagination,
+                search: _vm.handleSearch,
+                sort: _vm.handleSort,
+                removedData: _vm.removeData,
+                editedData: _vm.editData,
+                createdData: _vm.addData,
+                removedSelected: _vm.hapusDataTerseleksi,
+                selectedId: _vm.selectedDataId
+              }
+            })
+          ],
+          1
+        )
       ]),
-      _vm._v("\n    \n   " + _vm._s(_vm.selectedRowsId) + "\n    "),
       _vm._v(" "),
       _c(
         "b-modal",
@@ -1522,16 +1569,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h5", { staticClass: "card-title" }, [_vm._v("Management Items")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -1680,7 +1718,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!************************************************!*\
   !*** ./resources/js/services/items_service.js ***!
   \************************************************/
-/*! exports provided: createItem, loadData, deleteItem, updateItem, loadMore */
+/*! exports provided: createItem, loadData, deleteItem, deleteAllSelected, updateItem, loadMore */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1688,6 +1726,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createItem", function() { return createItem; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadData", function() { return loadData; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteItem", function() { return deleteItem; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteAllSelected", function() { return deleteAllSelected; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateItem", function() { return updateItem; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadMore", function() { return loadMore; });
 /* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./http_service */ "./resources/js/services/http_service.js");
@@ -1700,6 +1739,9 @@ function loadData(params) {
 }
 function deleteItem(id) {
   return Object(_http_service__WEBPACK_IMPORTED_MODULE_0__["http"])()["delete"]("user/items/".concat(id)); //ini diambil  dari Route item laravel nama routenya ('api/(prefix=user)/items)...karena sdh di definisikan di store maka tgl ('/items)
+}
+function deleteAllSelected(params) {
+  return Object(_http_service__WEBPACK_IMPORTED_MODULE_0__["http"])().post('user/items/delete', params); //ini diambil  dari Route item laravel nama routenya ('api/(prefix=user)/items/delete)...karena sdh di definisikan di store maka tgl ('/items)
 }
 function updateItem(id, data) {
   return Object(_http_service__WEBPACK_IMPORTED_MODULE_0__["httpFile"])().post("user/items/".concat(id), data); //ini diambil  dari Route item laravel nama routenya ('api/(prefix=user)/items)...karena sdh di definisikan di store maka tgl ('/items)
