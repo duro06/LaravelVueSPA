@@ -636,16 +636,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     sortby: this.sortBy,
                     sortbydesc: sorting
                   }
-<<<<<<< HEAD
-                }; // console.log(params);
 
-                _context.prev = 3;
-                _context.next = 6;
-                return _services_items_service__WEBPACK_IMPORTED_MODULE_3__["loadData"](params);
-
-              case 6:
-                response = _context.sent;
-=======
                 };
                 _context2.prev = 3;
                 _context2.next = 6;
@@ -653,7 +644,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 6:
                 response = _context2.sent;
->>>>>>> ryuuuu/master
+
                 // console.log(response);
                 getData = response.data.data;
                 this.items = getData.data; //MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
@@ -672,17 +663,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context2.next = 17;
                 break;
 
-<<<<<<< HEAD
-              case 14:
-                _context.prev = 14;
-                _context.t0 = _context["catch"](3);
-                console.log('' + _context.t0);
-=======
               case 13:
                 _context2.prev = 13;
                 _context2.t0 = _context2["catch"](3);
                 console.log('' + _context2.t0);
->>>>>>> ryuuuu/master
+
                 this.flashMessage.error({
                   message: "Some error occured, Please Refresh!",
                   time: 5000
@@ -693,11 +678,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context2.stop();
             }
           }
-<<<<<<< HEAD
-        }, _callee, this, [[3, 14]]);
-=======
+
         }, _callee2, this, [[3, 13]]);
->>>>>>> ryuuuu/master
+
       }));
 
       function loadItemsData() {
