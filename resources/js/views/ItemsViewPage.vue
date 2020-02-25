@@ -243,14 +243,14 @@ export default {
                 sortby: this.sortBy,
                 sortbydesc: sorting
             }};
-            console.log(params);
+            // console.log(params);
             try {
                 const response = await itemService.loadData(params); 
                 // console.log(response);
                 let getData = response.data.data
                 this.items = getData.data //MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
                 this.units = response.data.data_unit
-                // console.log(this.units)
+                console.log(response)
                 // console.log(this.items[0].nama);
                 //DAN ASSIGN INFORMASI LAINNYA KE DALAM VARIABLE META
                 this.meta = {

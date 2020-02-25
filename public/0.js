@@ -567,20 +567,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     sortby: this.sortBy,
                     sortbydesc: sorting
                   }
-                };
-                console.log(params);
-                _context.prev = 4;
-                _context.next = 7;
+                }; // console.log(params);
+
+                _context.prev = 3;
+                _context.next = 6;
                 return _services_items_service__WEBPACK_IMPORTED_MODULE_3__["loadData"](params);
 
-              case 7:
+              case 6:
                 response = _context.sent;
                 // console.log(response);
                 getData = response.data.data;
                 this.items = getData.data; //MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
 
-                this.units = response.data.data_unit; // console.log(this.units)
-                // console.log(this.items[0].nama);
+                this.units = response.data.data_unit;
+                console.log(response); // console.log(this.items[0].nama);
                 //DAN ASSIGN INFORMASI LAINNYA KE DALAM VARIABLE META
 
                 this.meta = {
@@ -595,7 +595,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 14:
                 _context.prev = 14;
-                _context.t0 = _context["catch"](4);
+                _context.t0 = _context["catch"](3);
                 console.log('' + _context.t0);
                 this.flashMessage.error({
                   message: "Some error occured, Please Refresh!",
@@ -607,7 +607,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return _context.stop();
             }
           }
-        }, _callee, this, [[4, 14]]);
+        }, _callee, this, [[3, 14]]);
       }));
 
       function loadItemsData() {
