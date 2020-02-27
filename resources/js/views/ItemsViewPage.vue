@@ -19,6 +19,8 @@
                             @createdData="addData"
                             @removedSelected="hapusDataTerseleksi"
                             @selectedId="selectedDataId"
+                            :tombolAddNew="tombolAddNew"
+                            :tombolEdit="tombolEdit"
                         />
                         
                    
@@ -148,6 +150,7 @@ export default {
         //MAKA AKAN MENJALANKAN FUNGSI BERIKUT
         this.loadItemsData()
         this.kosongkanForm()
+        // this.handleLoading(true)
     },
     
     data() {
@@ -182,6 +185,10 @@ export default {
             isInputActive: false,
 
             selectedRowsId:[],
+
+            // pengaturan tombol
+            tombolAddNew: true,
+            tombolEdit:true,
         }
     },
     
@@ -226,6 +233,8 @@ export default {
         
         //METHOD INI AKAN MENGHANDLE REQUEST DATA KE API
         loadItemsData: async function() {
+            this.isBusy = true;
+            // this.handleLoading(true);
             let current_page = this.search == ''? this.current_page:1;
             let sorting = this.sortByDesc? 'DESC':'ASC';
             // let
@@ -239,7 +248,7 @@ export default {
 
             try {
                 const response = await itemService.loadData(params); 
-                // console.log(response);
+                console.dir(response);
                 let getData = response.data.data
                 this.items = getData.data //MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
                 this.units = response.data.data_unit
@@ -277,6 +286,10 @@ export default {
             this.search = val //SET VALUE PENCARIAN KE VARIABLE SEARCH
             this.loadItemsData() //REQUEST DATA BARU
         },
+
+        // handleLoading(val) {
+        //     console.log(val);
+        // },
         //JIKA ADA EMIT SORT
         handleSort(val) {
             //MAKA SET SORT-NYA

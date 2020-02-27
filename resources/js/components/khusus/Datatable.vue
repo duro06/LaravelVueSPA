@@ -3,7 +3,7 @@
         <!-- BLOCK INI AKAN MENGHANDLE LOAD DATA PERPAGE, DENGAN DEFAULT ADALAH 10 DATA -->
         <div class="col-md-6">
             <div class="form-inline">
-                <label class="mr-2">Showing</label>
+                <label class="mr-2" >Showing</label>
                 <!-- KETIKA SELECT BOXNYA DIGANTI, MAKA AKAN MENJALANKAN FUNGSI loadPerPage -->
                 <select
                     class="custom-select custom-select-sm"
@@ -17,7 +17,8 @@
                     <option value="100">100</option>
                 </select>
                 <label class="ml-2">Entries</label>
-                <span>
+
+                <span v-show="tombolAddNew">
                     <b-button
                         pill
                         variant="outline-secondary"
@@ -57,29 +58,53 @@
                 :sort-desc.sync="sortDesc"
                 show-empty
                 responsive="sm"
-            >
+            >   
+                <template v-slot:table-busy>
+                    <div class="text-center my-2">
+                    <b-spinner class="align-middle"></b-spinner>
+                    <strong>Loading...</strong>
+                    </div>
+                </template>
                 <!-- Example scoped slot for select state illustrative purposes -->
                 <template v-slot:head(index)>
-                    <b-form-checkbox
-                        size="sm"
+                    <label class="custom-control fill-checkbox-grey" style="min-height:0.8rem !important;">
+                        <input type="checkbox" 
+                        class="fill-control-input"
                         @change="selectAllRows"
                         :checked="selectedItems.length === items.length"
-                    >
-                    </b-form-checkbox>
+                        >
+                        <span class="fill-control-indicator"></span>
+                        <span class="fill-control-description"></span>
+                    </label>
                 </template>
                 <template v-slot:cell(index)="row">
-                    <b-form-checkbox
-                        size="sm"
-                        name="selected-items"
+                    <label class="custom-control fill-checkbox-grey" style="min-height:0.8rem !important;">
+                        <input type="checkbox" 
+                        class="fill-control-input"
+                         name="selected-items"
                         v-model="selectedItems"
                         :value="row.item"
-                    >
-                    </b-form-checkbox>
+                        >
+                        <span class="fill-control-indicator"></span>
+                        <span class="fill-control-description"></span>
+                    </label>
                 </template>
 
                 <!-- Example scoped button tambahan -->
+                <template v-slot:cell(status)="row">
+                     <span v-if="row.item.status == 1" class="badge badge-success">Active</span>
+                     <button 
+                     class="btn btn-danger btn-xsm"
+                     v-else
+                     @click="konfirmStatus(row.item)"
+                     >InActive
+                     </button>
+                       
+                </template>
+                <!-- Example scoped button tambahan -->
                 <template v-slot:cell(actions)="row">
                     <button
+                        v-show="tombolEdit"
                         class="tombol-di-table"
                         @click="editData(row.item)"
                         v-b-tooltip.hover
@@ -100,20 +125,20 @@
             <div class="box-bw-table">
                 <div class="row">
                     <div class="col-md-6">
-                <button 
-                    class="tombol-di-bw-table" 
-                    @click="removeSelected"
-                    :disabled="!selectedItems.length"    
-                    >
-                    <i class="fa fa-trash"></i> Delete Selected Table Data
-                </button>
-                </div>
-                <div class="col-md-6 text-right">
-                    <p style="color:white;">
-                        Showing {{ meta.from }} to {{ meta.to }} of
-                        {{ meta.total }} table data
-                    </p>
-                </div>    
+                        <button 
+                            class="tombol-di-bw-table" 
+                            @click="removeSelected"
+                            :disabled="!selectedItems.length"    
+                            >
+                            <i class="fa fa-trash"></i> Delete Selected Table Data
+                        </button>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <p style="color:white;">
+                            Showing {{ meta.from }} to {{ meta.to }} of
+                            {{ meta.total }} table data
+                        </p>
+                    </div>    
                 </div>
                 
             </div>
@@ -137,6 +162,7 @@
                 </div>
             </div>
         
+    
     </div>
 </template>
 
@@ -144,11 +170,11 @@
 import _ from "lodash"; //IMPORT LODASH, DIMANA AKAN DIGUNAKAN UNTUK MEMBUAT DELAY KETIKA KOLOM PENCARIAN DIISI
 
 export default {
-    computed: {
-        remaining() {
-            // console.dir(this.selected);
-        }
-    },
+    // computed: {
+    //     tombolAdd: function() {
+    //         return this.isVisible? 'd-block': 'd-none';
+    //     }
+    // },
     //PROPS INI ADALAH DATA YANG AKAN DIMINTA DARI PENGGUNA COMPONENT DATATABLE YANG KITA BUAT
     props: {
         //ITEMS STRUKTURNYA ADALAH ARRAY, KARENA BAGIAN INI BERISI DATA YANG AKAN DITAMPILKAN DAN SIFATNYA WAJIB DIKIRIMKAN KETIKA COMPONENT INI DIGUNAKAN
@@ -164,11 +190,18 @@ export default {
         //ADAPUN META, TYPENYA ADALAH OBJECT YANG BERISI INFORMASI MENGENAL CURRENT PAGE, LOAD PERPAGE, TOTAL DATA, DAN LAIN SEBAGAINYA.
         meta: {
             required: true
-        }
+        },
 
-        // completed: {
-        //     type:Boolean
-        // }
+        tombolAddNew: {
+            type: Boolean,
+            required:true
+        },
+
+        tombolEdit: {
+            type: Boolean,
+            required:true
+        }
+        
     },
     data() {
         return {
@@ -182,7 +215,9 @@ export default {
 
             allSelected: false,
             selectedRow: false,
-            booleanValue: false
+            booleanValue: false,
+
+            isVisible: false,
         };
     },
     watch: {
@@ -200,7 +235,13 @@ export default {
                 sortBy: this.sortBy,
                 sortDesc: this.sortDesc
             });
-        }
+        },
+
+        // isBusy(val) {
+        //     this.$emit("busy", {
+        //         isBusy: this.isBusy
+        //     });
+        // }
     },
     methods: {
         selectAllRows() {
@@ -265,11 +306,11 @@ export default {
 
         addNew() {
             this.$emit("createdData"); // kirim event createdData parent (itemnya)
-        }
+        },
 
-        // selectId(index) {
-        //     this.$emit('selectedId', index);
-        // }
+        konfirmStatus(index) {
+            this.$emit('konfirmasiStatus', index);
+        }
     }
 };
 </script>
