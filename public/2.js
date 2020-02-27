@@ -375,8 +375,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 getData = response.data.data;
                 this.items = getData.data; //MAKA ASSIGN DATA POSTINGAN KE DALAM VARIABLE ITEMS
 
-                this.units = response.data.data_unit; // console.log(this.units)
-                // console.log(this.items[0].nama);
+                this.units = response.data.data_unit;
+                console.log(response); // console.log(this.items[0].nama);
                 //DAN ASSIGN INFORMASI LAINNYA KE DALAM VARIABLE META
 
                 this.meta = {
@@ -386,11 +386,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   from: getData.from,
                   to: getData.to
                 };
-                _context2.next = 19;
+                _context2.next = 20;
                 break;
 
-              case 15:
-                _context2.prev = 15;
+              case 16:
+                _context2.prev = 16;
                 _context2.t0 = _context2["catch"](4);
                 console.log('' + _context2.t0);
                 this.flashMessage.error({
@@ -398,12 +398,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   time: 5000
                 });
 
-              case 19:
+              case 20:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[4, 15]]);
+        }, _callee2, this, [[4, 16]]);
       }));
 
       function loadItemsData() {
