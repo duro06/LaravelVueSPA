@@ -106826,16 +106826,16 @@ var routes = [{
   //     meta : {title: 'Management Products'},
   //     component: () => import('./views/ListProduct.vue')
   // },
-  ] // ini yang lama
-  // beforeEnter(to, from, next) {
-  //     //store.commit('CLEAR_ERRORS') //TAMBAHKAN BARIS INI
-  //     if (!auth.isLoggedIn()) {
-  //         next('/login');
-  //     } else {
-  //         next();
-  //     }
-  // }
-
+  ],
+  // ini yang lama
+  beforeEnter: function beforeEnter(to, from, next) {
+    //store.commit('CLEAR_ERRORS') //TAMBAHKAN BARIS INI
+    if (!_services_auth_service__WEBPACK_IMPORTED_MODULE_4__["isLoggedIn"]()) {
+      next('/login');
+    } else {
+      next();
+    }
+  }
 }, {
   path: '/products',
   component: _views_products_index_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
@@ -106919,15 +106919,15 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: 'history',
   routes: routes,
   linkActiveClass: 'active'
-});
-router.beforeEach(function (to, from, next) {
-  // store.commit('CLEAR_ERRORS') //TAMBAHKAN BARIS INI
-  if (!_services_auth_service__WEBPACK_IMPORTED_MODULE_4__["isLoggedIn"]()) {
-    next('/login');
-  } else {
-    next();
-  }
-});
+}); // router.beforeEach((to, from, next) => {
+//     // store.commit('CLEAR_ERRORS') //TAMBAHKAN BARIS INI
+//     if (!auth.isLoggedIn()) {
+//         next('/login');
+//     } else {
+//         next();
+//     }
+// })
+
 /* harmony default export */ __webpack_exports__["default"] = (router);
 
 /***/ }),

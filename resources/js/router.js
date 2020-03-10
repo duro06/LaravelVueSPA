@@ -63,14 +63,14 @@ const routes = [
         ],
 
         // ini yang lama
-        // beforeEnter(to, from, next) {
-        //     //store.commit('CLEAR_ERRORS') //TAMBAHKAN BARIS INI
-        //     if (!auth.isLoggedIn()) {
-        //         next('/login');
-        //     } else {
-        //         next();
-        //     }
-        // }
+        beforeEnter(to, from, next) {
+            //store.commit('CLEAR_ERRORS') //TAMBAHKAN BARIS INI
+            if (!auth.isLoggedIn()) {
+                next('/login');
+            } else {
+                next();
+            }
+        }
         
     },
     {
@@ -153,13 +153,13 @@ const router = new Router({
     linkActiveClass: 'active',
 });
 
-router.beforeEach((to, from, next) => {
-    // store.commit('CLEAR_ERRORS') //TAMBAHKAN BARIS INI
-    if (!auth.isLoggedIn()) {
-        next('/login');
-    } else {
-        next();
-    }
-})
+// router.beforeEach((to, from, next) => {
+//     // store.commit('CLEAR_ERRORS') //TAMBAHKAN BARIS INI
+//     if (!auth.isLoggedIn()) {
+//         next('/login');
+//     } else {
+//         next();
+//     }
+// })
 
 export default router;
