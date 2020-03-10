@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
  */
 
 Route::group(['prefix' => 'auth'], function() {
+
     Route::post('register', 'AuthController@register'); // ini untuk alamat api/auth/register
     Route::post('login', 'AuthController@login');
 
@@ -37,7 +38,7 @@ Route::group(['prefix' => 'auth'], function() {
 Route::group(['prefix' => 'user'], function () {
 
     Route::group(['middleware' => 'auth:api'], function () {
-
+        Route::resource('categories', 'CategoryController');
         // Route::post('edit-category', function () {
         //     return response()->json([
         //         'meesage' => 'Admin Access', 'status_code'=>200
@@ -57,17 +58,26 @@ Route::group(['prefix' => 'user'], function () {
         Route::put('update-status/{register}', 'RegisterController@update_status')->middleware('scope:Root,Admin');
         
         Route::resource('items', 'ItemController'); // seluruh route items masuk middleware
+        Route::resource('products', 'ProductController'); // seluruh route product masuk middleware
         Route::post('items/delete', 'ItemController@deleteAll');
+        Route::post('products/delete', 'ProductController@deleteAll');
+        
+        // api/user/orders   ->untuk order dr mitra
+        Route::resource('orders', 'OrderController'); 
+        Route::post('mitra-ordered', 'OrderController@purchase');
+
+        Route::put('update-profile/{user}', 'AuthController@update_profile');
+        Route::put('update-image/{user}', 'AuthController@update_image');
 
     });
 });
 
-Route::resource('categories', 'CategoryController');
+
 
 //untuk register selain root dan admin
 Route::group(['prefix' => 'client'], function () {
     Route::post('register', 'RegisterController@register'); // ini untuk alamat api/client/register
-
+    
     // ini khusus scope root dan admin
     // Route::group(['middleware' => 'auth:api'], function () {
         

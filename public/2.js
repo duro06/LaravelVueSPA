@@ -195,6 +195,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
  //IMPORT COMPONENT DATATABLENYA
 // import MyCurrencyInput from '../components/khusus/MyCurrencyInput.vue'
 
@@ -267,7 +268,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       selectedRowsId: [],
       // pengaturan tombol
       tombolAddNew: true,
-      tombolEdit: true
+      tombolEdit: true,
+      showLoading: false
     };
   },
   computed: {
@@ -351,7 +353,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                this.isBusy = true; // this.handleLoading(true);
+                this.showLoading = true; // this.handleLoading(true);
 
                 current_page = this.search == '' ? this.current_page : 1;
                 sorting = this.sortByDesc ? 'DESC' : 'ASC'; // let
@@ -386,7 +388,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   from: getData.from,
                   to: getData.to
                 };
+<<<<<<< HEAD
                 _context2.next = 20;
+=======
+                this.showLoading = false;
+                _context2.next = 21;
+>>>>>>> ryuuuu/test
                 break;
 
               case 16:
@@ -397,8 +404,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   message: "Some error occured, Please Refresh!",
                   time: 5000
                 });
+                this.showLoading = false;
 
+<<<<<<< HEAD
               case 20:
+=======
+              case 21:
+>>>>>>> ryuuuu/test
               case "end":
                 return _context2.stop();
             }
@@ -706,7 +718,8 @@ var render = function() {
                 fields: _vm.fields,
                 meta: _vm.meta,
                 tombolAddNew: _vm.tombolAddNew,
-                tombolEdit: _vm.tombolEdit
+                tombolEdit: _vm.tombolEdit,
+                isBusy: _vm.showLoading
               },
               on: {
                 per_page: _vm.handlePerPage,

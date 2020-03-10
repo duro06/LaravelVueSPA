@@ -21,6 +21,7 @@
                             @selectedId="selectedDataId"
                             :tombolAddNew="tombolAddNew"
                             :tombolEdit="tombolEdit"
+                            :isBusy="showLoading"
                         />
                         
                    
@@ -189,6 +190,7 @@ export default {
             // pengaturan tombol
             tombolAddNew: true,
             tombolEdit:true,
+            showLoading:false,
         }
     },
     
@@ -233,7 +235,7 @@ export default {
         
         //METHOD INI AKAN MENGHANDLE REQUEST DATA KE API
         loadItemsData: async function() {
-            this.isBusy = true;
+            this.showLoading = true;
             // this.handleLoading(true);
             let current_page = this.search == ''? this.current_page:1;
             let sorting = this.sortByDesc? 'DESC':'ASC';
@@ -262,12 +264,14 @@ export default {
                     from: getData.from,
                     to: getData.to 
                 }
+                this.showLoading = false;
             } catch (error) {
                     console.log(''+error)
                     this.flashMessage.error({
                     message: "Some error occured, Please Refresh!",
                     time: 5000
                 });
+                this.showLoading = false;
             }
         },
         

@@ -7,6 +7,14 @@ export function register(user) {
     return http().post('/auth/register', user);
 }
 
+export function updateProfile(id, data) {
+    return http().put(`/user/update-profile/${id}`, data);
+}
+
+export function updateImage(id, data) {
+    return httpFile().post(`/user/update-image/${id}`, data);
+}
+
 export function login(user) {
     return http().post('/auth/login', user)
         .then(response => {
