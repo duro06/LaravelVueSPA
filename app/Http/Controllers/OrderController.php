@@ -57,13 +57,13 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'total'=>'required|integer',
             'user_id'=>'required|numeric',
             'product_id'=>'required|numeric',
             'harga'=>'required|integer'
         ]);
+        // dd($request->all());
 
         $order = new Order();
         $order->reff = Str::random();
