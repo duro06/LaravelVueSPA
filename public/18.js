@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[17],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[18],{
 
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/Dashboard.vue?vue&type=template&id=1f79daf6&":
 /*!*******************************************************************************************************************************************************************************************************!*\
