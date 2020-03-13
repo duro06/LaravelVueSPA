@@ -50,7 +50,7 @@ Route::group(['prefix' => 'user'], function () {
         // INI UNTUK MITRA
         Route::resource('items', 'ItemController'); // seluruh route items masuk middleware
         Route::resource('products', 'ProductController'); // seluruh route product masuk middleware
-        Route::get('charts', 'ChartController@index');// akses api get charts by user_id
+        Route::resource('charts', 'ChartController');// akses api get charts by user_id
 
         Route::post('items/delete', 'ItemController@deleteAll');
         Route::post('products/delete', 'ProductController@deleteAll');

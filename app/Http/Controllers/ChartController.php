@@ -55,7 +55,7 @@ class ChartController extends Controller
 
         $chart = new Chart();
 
-        $chart->qty         = 1;
+        $chart->qty         = $request->qty;
         $chart->user_id     = $request->user_id;
         $chart->product_id  = $request->product_id;
         $chart->harga       = $request->harga;
