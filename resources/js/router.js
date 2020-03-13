@@ -7,11 +7,16 @@ import IndexOrder from './views/orders/Index.vue';
 
 import * as auth from './services/auth_service';
 
+import store from "./store.js";
+
 Vue.use(Router);
 
 const routes = [{
         path: '/home',
         component: Home,
+        meta: {
+            requiresAuth: true
+        },
         children: [{
                 path: '',
                 name: 'dashboard',
@@ -63,14 +68,6 @@ const routes = [{
                 component: () => import('./views/ProfileUser.vue')
             },
 
-            // ini router product yg lama
-            // {
-            //     path: 'products',
-            //     name: 'products',
-            //     meta : {title: 'Management Products'},
-            //     component: () => import('./views/ListProduct.vue')
-            // },
-
         ],
 
         // ini yang lama
@@ -83,10 +80,13 @@ const routes = [{
         //     }
         // }
 
-    },
+    },// akhir dari home
     {
         path: '/products',
         component: IndexProduct,
+        meta: {
+            requiresAuth: true
+        },
         children: [{
                 path: '',
                 name: 'products.data',
@@ -120,10 +120,13 @@ const routes = [{
                 }
             }
         ],
-    },
+    },// akhir dari products
     {
         path: '/orders',
         component: IndexOrder,
+        meta: {
+            requiresAuth: true
+        },
         children: [
             {
             path: '',
@@ -143,12 +146,9 @@ const routes = [{
                 }
             }
         ],
-    },
+    },// akhir dari orders
 
-
-
-
-
+    // INI TANPA META AUTH
     {
         path: '/register',
         name: 'register',
@@ -194,13 +194,17 @@ const router = new Router({
     linkActiveClass: 'active',
 });
 
-// router.beforeEach((to, from, next) => {
-//     // store.commit('CLEAR_ERRORS') //TAMBAHKAN BARIS INI
-//     if (!auth.isLoggedIn()) {
-//         next('/login');
-//     } else {
-//         next();
-//     }
-// })
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        store.commit('CLEAR_ERRORS') //TAMBAHKAN BARIS INI
+        if (!auth.isLoggedIn()) {
+            next('/login');
+        } else {
+            next();
+        }
+    }else {
+        next()
+    }
+})
 
 export default router;

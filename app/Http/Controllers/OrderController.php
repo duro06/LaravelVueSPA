@@ -38,6 +38,23 @@ class OrderController extends Controller
         );
     }
 
+    // get orders by user_id
+    public function get_by_user_id()
+    {
+        $orders = Order::orderBy('created_at', 'DESC')
+            ->when(request()->q, function($orders) {
+                $orders = $orders->where('user_id', request()->q);
+        })->paginate(10);
+
+        $orders->load('status:id,name');
+        // $user = User::all();
+        return response()->json([
+            'status' => 'success', 
+            'data' => $orders,
+            ]
+        );
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -202,7 +219,22 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        //
+        $request->validate([
+            'status_id'=>'required|numeric',
+        ]);
+
+        $order->status_id = $request->status_id;
+
+        if ($order->save()) {
+            return response()->json($order,200);
+        } else {
+            
+            $message = [
+                'message'=>'some errors occured, Please try again',
+                'status_code'=>500
+            ];
+            return response()->json($message,500);
+        }
     }
 
     /**
