@@ -19,7 +19,7 @@ class ChartController extends Controller
                 $charts = $charts->where('user_id', request()->q);
         })->paginate(10);
 
-        // $charts->load('status:id,name');
+        $charts->load('product:id,name');
         // $user = User::all();
         return response()->json([
             'status' => 'success', 

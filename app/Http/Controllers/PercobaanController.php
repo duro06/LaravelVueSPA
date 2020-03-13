@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\Order;
+use App\Chart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -14,15 +15,22 @@ class PercobaanController extends Controller
     //    $product = Product::all(); //panggil seluruh data
     //     $product = Product::latest()->first(); // panggil data terakhir
     //    dd($product);
-        $order = Order::latest()->first();
+       $charts = Chart::where('user_id', 13)->get();
+    //    $coba = foreach ($charts as $key => $row) {
+    //             // $order->detail_order()->create([
+    //                 'product_id' => $row['product_id'],
+    //                 'qty' => $row['qty'],
+    //                 'harga' => $row['harga']
+    //             // ]);
+            // }
         // if ($order->count() > 0) {
         //     $order = $order->first();
-            $random = Str::random();
+            // $random = Str::random();
             // $hasil = 'INV-' . $explode[1] + 1;
         // }
         // return $hasil = 'INV-1';
 
-        dd($random);
+        dd($coba);
    }
    public function kedua(Product $product)
    {

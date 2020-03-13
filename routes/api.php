@@ -56,8 +56,9 @@ Route::group(['prefix' => 'user'], function () {
         Route::post('products/delete', 'ProductController@deleteAll');
         
         // api/user/orders   ->untuk order dr mitra 
-        Route::resource('orders', 'OrderController'); 
+        Route::resource('orders', 'OrderController');// 
         Route::get('orders-user', 'OrderController@get_by_user_id'); // untuk akses orders by user_id
+        Route::post('chart-orders', 'OrderController@orderFromChart');
 
         Route::put('update-profile/{user}', 'AuthController@update_profile');
         Route::put('update-image/{user}', 'AuthController@update_image');
