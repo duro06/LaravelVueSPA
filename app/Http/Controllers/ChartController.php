@@ -104,7 +104,22 @@ class ChartController extends Controller
      */
     public function update(Request $request, Chart $chart)
     {
-        //
+        $request->validate([
+            'qty'=>'required|numeric',
+        ]);
+
+        $chart->qty = $request->qty;
+
+        if ($chart->save()) {
+            return response()->json($chart,200);
+        } else {
+            
+            $message = [
+                'message'=>'some errors occured, Please try again',
+                'status_code'=>500
+            ];
+            return response()->json($message,500);
+        }
     }
 
     /**
