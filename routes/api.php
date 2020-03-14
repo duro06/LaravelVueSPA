@@ -51,7 +51,8 @@ Route::group(['prefix' => 'user'], function () {
         Route::resource('items', 'ItemController'); // seluruh route items masuk middleware
         Route::resource('products', 'ProductController'); // seluruh route product masuk middleware
         Route::get('charts', 'ChartController@index');// akses api get charts by user_id
-        Route::put('update-charts-qty/{chart}', 'OrderController@update'); // update qty chart
+        Route::post('charts', 'ChartController@store');// akses api post charts by user_id
+        Route::put('update-charts-qty/{chart}', 'ChartController@update'); // update qty chart
 
         Route::post('items/delete', 'ItemController@deleteAll');
         Route::post('products/delete', 'ProductController@deleteAll');
