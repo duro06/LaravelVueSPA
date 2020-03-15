@@ -61,8 +61,10 @@ Route::group(['prefix' => 'user'], function () {
         Route::resource('orders', 'OrderController');// 
         Route::get('orders-user', 'OrderController@get_by_user_id'); // untuk akses orders by user_id
         Route::post('chart-orders', 'OrderController@orderFromChart');
+        Route::delete('delete-charts/{chart}', 'ChartController@destroy')->name('chart.destroy'); // delete chart by id
         // details order
         Route::get('detail-orders', 'DetailOrderController@index');
+        Route::post('details-orders', 'DetailOrderController@ngambil');
 
 
         Route::put('update-profile/{user}', 'AuthController@update_profile');

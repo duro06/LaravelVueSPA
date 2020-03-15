@@ -12,6 +12,7 @@ class DetailOrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // Request $request
     public function index()
     {
         $details = DetailOrder::orderBy('created_at', 'DESC')
@@ -26,6 +27,51 @@ class DetailOrderController extends Controller
             'data' => $details,
             ]
         );
+    }
+
+    /*
+    Coba sendiri dulu...
+    Request $request
+     */
+// public function ngambil()
+public function ngambil(Request $request)
+    {
+
+        $request->validate([
+            'q'=>'required|numeric',            
+        ]);
+        
+        $details = DetailOrder::orderBy('created_at', 'DESC')
+            ->when($request->q, function($details) {
+                $details = $details->where('order_id', request()->q);
+        })->get();
+        $details->load('product:id,name');
+        // $user = User::all();
+        return response()->json([
+            'status' => 'success', 
+            'data' => $details,
+            ]
+        );
+
+        // return response()->json($details->all(),200);
+        // return response()->json(request()->all(),200);
+        // return response()->json($request->all(),200);
+        // $request->validate([
+        //     'q'=>'required|numeric',
+        // ]);
+
+        // $details = DetailOrder::orderBy('created_at', 'DESC')
+        //     ->when($request->q, function($details) {
+        //         $details = $details->where('order_id', $request->q);
+        // })->get();
+
+        // $details->load('product:id,name');
+        // // $user = User::all();
+        // return response()->json([
+        //     'status' => 'success', 
+        //     'data' => $details,
+        //     ]
+        // );
     }
 
     /**
