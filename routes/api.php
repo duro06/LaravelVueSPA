@@ -51,7 +51,6 @@ Route::group(['prefix' => 'user'], function () {
         Route::resource('items', 'ItemController'); // seluruh route items masuk middleware
         Route::resource('products', 'ProductController'); // seluruh route product masuk middleware
         Route::get('charts', 'ChartController@index');// akses api get charts by user_id
-        Route::post('charts', 'ChartController@store');// akses api post charts by user_id
         Route::put('update-charts-qty/{chart}', 'ChartController@update'); // update qty chart
 
         Route::post('items/delete', 'ItemController@deleteAll');
@@ -64,12 +63,14 @@ Route::group(['prefix' => 'user'], function () {
         Route::delete('delete-charts/{chart}', 'ChartController@destroy')->name('chart.destroy'); // delete chart by id
         // details order
         Route::get('detail-orders', 'DetailOrderController@index');
-        Route::post('details-orders', 'DetailOrderController@ngambil');
 
 
         Route::put('update-profile/{user}', 'AuthController@update_profile');
         Route::put('update-image/{user}', 'AuthController@update_image');
 
+        // wawan nambahi dewe
+        Route::post('details-orders', 'DetailOrderController@ngambil');
+        Route::post('charts', 'ChartController@store');// akses api post charts by user_id
     });
 });
 
