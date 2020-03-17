@@ -43,6 +43,7 @@ Route::group(['prefix' => 'user'], function () {
         // })->middleware('scope:Root,Admin');
         Route::get('list-user', 'UserController@list')->middleware('scope:Root,Admin');
         Route::put('update-status-user/{user}', 'UserController@update_status')->middleware('scope:Root,Admin');
+        Route::get('user-authenticated', 'UserController@getUserLogin')->name('user.authenticated');
         
         Route::get('list-register', 'RegisterController@list')->middleware('scope:Root,Admin');
         Route::put('update-status/{register}', 'RegisterController@update_status')->middleware('scope:Root,Admin');
@@ -51,6 +52,7 @@ Route::group(['prefix' => 'user'], function () {
         Route::resource('items', 'ItemController'); // seluruh route items masuk middleware
         Route::resource('products', 'ProductController'); // seluruh route product masuk middleware
         Route::get('charts', 'ChartController@index');// akses api get charts by user_id
+        Route::post('charts', 'ChartController@store'); // tambah data chart
         Route::put('update-charts-qty/{chart}', 'ChartController@update'); // update qty chart
 
         Route::post('items/delete', 'ItemController@deleteAll');
@@ -68,9 +70,11 @@ Route::group(['prefix' => 'user'], function () {
         Route::put('update-profile/{user}', 'AuthController@update_profile');
         Route::put('update-image/{user}', 'AuthController@update_image');
 
-        // wawan nambahi dewe
-        Route::post('details-orders', 'DetailOrderController@ngambil');
-        Route::post('charts', 'ChartController@store');// akses api post charts by user_id
+        // untuk route notifications
+        Route::resource('notification', 'NotificationController')->except(['create', 'destroy']);
+
+        // penambahan broadcast
+
     });
 });
 
