@@ -174,11 +174,8 @@ class OrderController extends Controller
 
             //GET USER YANG ROLE-NYA SUPERADMIN DAN FINANCE
             //KENAPA? KARENA HANYA ROLE ITULAH YANG AKAN MENDAPATKAN NOTIFIKASI
-            $user = $request->user();
-            $users = User::whereIn('role', ['Root', 'Admin'])->get();
-            //KIRIM NOTIFIKASINYA MENGGUNAKAN FACADE NOTIFICATION
-            Notification::send($users, new OrderNotification($order, $user));
-
+            $user = User::find(Auth::id());
+            event(new OrderStatusChanged($order, $user));  
             //apabila tidak terjadi error, penyimpanan diverifikasi
             DB::commit();
 
@@ -290,6 +287,8 @@ class OrderController extends Controller
         $order->status_id = $request->status_id;
 
         if ($order->save()) {
+            $user = User::find(Auth::id());
+            event(new OrderStatusChanged($order, $user));
             return response()->json($order,200);
         } else {
             
