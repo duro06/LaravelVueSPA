@@ -48,13 +48,31 @@ class OrderController extends Controller
 
     // get orders by user_id
     public function get_by_user_id()
-    {
+    {           
         $orders = Order::orderBy('created_at', 'DESC')
             ->when(request()->q, function($orders) {
                 $orders = $orders->where('user_id', request()->q);
         })->paginate(10);
 
         $orders->load('status:id,name');
+        // $user = User::all();
+        return response()->json([
+            'status' => 'success', 
+            'data' => $orders,
+            ]
+        );
+    }
+
+    public function get_all_by_id()
+    {   
+        
+            $orders = Order::orderBy('created_at', 'DESC')
+            ->when(request()->q, function($orders) {
+                $orders = $orders->where('user_id', request()->q)
+                                ->andWhere('status_id', '<', 6);
+            })->get();
+            
+        // $orders->load('status:id,name');
         // $user = User::all();
         return response()->json([
             'status' => 'success', 
@@ -175,7 +193,8 @@ class OrderController extends Controller
             //GET USER YANG ROLE-NYA SUPERADMIN DAN FINANCE
             //KENAPA? KARENA HANYA ROLE ITULAH YANG AKAN MENDAPATKAN NOTIFIKASI
             $user = User::find(Auth::id());
-            event(new OrderStatusChanged($order, $user));  
+            event(new OrderStatusChanged($order, $user)); 
+
             //apabila tidak terjadi error, penyimpanan diverifikasi
             DB::commit();
 
