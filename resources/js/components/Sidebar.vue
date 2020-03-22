@@ -35,7 +35,8 @@
                             <div class="sb-nav-link-icon">
                                 <i class="fas fa-registered"></i>
                             </div>
-                            Data Register
+                            <span>Data Register</span>
+                            <span class="badge" v-if="reg_notifs.length > 0">{{reg_notifs.length}}</span>
                         </router-link>
                     </div>
                     <div class="nav-link-ku">
@@ -107,7 +108,8 @@
                             <div class="sb-nav-link-icon">
                                 <i class="fas fa-shopping-cart"></i>
                             </div>
-                            Order
+                            <span>Orders</span>
+                            <span class="badge" v-if="notif_orders.length > 0">{{notif_orders.length}}</span>
                         </router-link>
                     </div>
                 </div>
@@ -122,7 +124,12 @@
 
 <script>
 import * as auth from "../services/auth_service";
+import { mapActions, mapState } from "vuex";
 export default {
+    created(){
+        this.getRegNotif();
+        this.getOrderNotif();
+    },
     methods: {
         logout: async function() {
             auth.logout();
@@ -134,7 +141,41 @@ export default {
             document
                 .querySelector("body")
                 .classList.toggle("sb-sidenav-toggled");
-        }
-    }
+        },
+
+        ...mapActions("notification", ["getRegNotif", "getOrderNotif"]),
+
+    },
+
+    mounted(){
+        window.Echo.channel('capcin-reg')
+        .listen('RegisterEvent', (register) => {
+            this.getRegNotif();
+        });
+        // echo channel order
+        window.Echo.channel('capcin-tracker')
+        .listen('OrderStatusChanged', (order) => {
+            // console.log(order);
+            this.getOrderNotif();
+        });
+    },
+    computed: {
+         ...mapState("notification", {
+            reg_notifs: state => state.reg_notif,
+            notif_orders: state => state.notif_orders
+        }),
+        
+    },
 };
 </script>
+
+<style scoped>
+.nav-link-ku .badge{
+    position: absolute;
+    right: 15px;
+    color:white;
+    border-radius: 30%;
+    font-size: 10px;
+    background-color: rgb(241, 53, 69);
+}
+</style>
